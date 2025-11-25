@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { ArrowUp, ArrowDown, ArrowLeft, ArrowRight, RotateCcw, Key, Moon } from 'lucide-react';
+import { ArrowUp, ArrowDown, ArrowLeft, ArrowRight, RotateCcw } from 'lucide-react';
 import './index.css'
 
 interface Position {
@@ -14,7 +14,7 @@ interface Door {
   open: boolean;
 }
 
-interface Key {
+interface GameKey {
   x: number;
   y: number;
   color: string;
@@ -63,7 +63,7 @@ interface Level {
   pillows: Position[];
   dreams: Position[];
   doors: Door[];
-  keys: Key[];
+  keys: GameKey[];
   enemies: Enemy[];
   powerups: Powerup[];
   platforms?: MovingPlatform[];
@@ -514,7 +514,6 @@ const BetosaurusGame: React.FC = () => {
   const [particles, setParticles] = useState<Particle[]>([]);
   const [showPillowMessage, setShowPillowMessage] = useState(false);
   const [platforms, setPlatforms] = useState<MovingPlatform[]>(levels[0].platforms || []);
-  const gameLoopRef = useRef<NodeJS.Timeout | null>(null);
   const particleIdRef = useRef(0);
 
   const level = levels[currentLevel];
@@ -528,35 +527,9 @@ const BetosaurusGame: React.FC = () => {
     return door && !door.open;
   };
 
-  const isPillow = (x: number, y: number) => {
-    return level.pillows.some((p, i) => 
-      p.x === x && p.y === y && !collectedPillows.includes(i)
-    );
-  };
-
-  const isDream = (x: number, y: number) => {
-    return level.dreams.some((d, i) => 
-      d.x === x && d.y === y && !collectedDreams.includes(i)
-    );
-  };
-
-  const isKey = (x: number, y: number) => {
-    return level.keys.some((k, i) => 
-      k.x === x && k.y === y && !collectedKeys.includes(i)
-    );
-  };
-
   const isEnemy = (x: number, y: number) => {
     return enemies.some(e => e.pos.x === x && e.pos.y === y);
   };
-
-  const checkCollision = useCallback((x: number, y: number) => {
-    if (isEnemy(x, y)) {
-      setGameLost(true);
-      return true;
-    }
-    return false;
-  }, [enemies]);
 
   const movePlayer = useCallback((dx: number, dy: number) => {
     if (gameWon || gameLost) return;
@@ -691,7 +664,7 @@ const BetosaurusGame: React.FC = () => {
         playSound(150, 0.8, 'square');
       }
     }
-  }, [player, gameWon, gameLost, level, collectedPillows, collectedDreams, collectedKeys, doors, playSound, playRoar, initAudio]);
+  }, [player, gameWon, gameLost, level, collectedPillows, collectedDreams, collectedKeys, doors, playSound, playRoar, initAudio, activePowerups, bestTimes, collectedPowerups, currentLevel, isDoor, isEnemy, isWall, levels.length, startTime]);
 
   // Game loop for enemy and platform movement
   useEffect(() => {
@@ -727,7 +700,7 @@ const BetosaurusGame: React.FC = () => {
     }, 800);
 
     return () => clearInterval(interval);
-  }, [gameWon, gameLost, player]);
+  }, [gameWon, gameLost, player, activePowerups, playSound]);
 
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
