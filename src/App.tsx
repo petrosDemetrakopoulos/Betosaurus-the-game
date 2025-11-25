@@ -518,19 +518,6 @@ const BetosaurusGame: React.FC = () => {
 
   const level = levels[currentLevel];
 
-  const isWall = (x: number, y: number) => {
-    return level.walls.some(w => w.x === x && w.y === y);
-  };
-
-  const isDoor = (x: number, y: number) => {
-    const door = doors.find(d => d.x === x && d.y === y);
-    return door && !door.open;
-  };
-
-  const isEnemy = (x: number, y: number) => {
-    return enemies.some(e => e.pos.x === x && e.pos.y === y);
-  };
-
   const movePlayer = useCallback((dx: number, dy: number) => {
     if (gameWon || gameLost) return;
     
@@ -538,6 +525,19 @@ const BetosaurusGame: React.FC = () => {
     
     const newX = player.x + dx;
     const newY = player.y + dy;
+
+    const isWall = (x: number, y: number) => {
+      return level.walls.some(w => w.x === x && w.y === y);
+    };
+
+    const isDoor = (x: number, y: number) => {
+      const door = doors.find(d => d.x === x && d.y === y);
+      return door && !door.open;
+    };
+
+    const isEnemy = (x: number, y: number) => {
+      return enemies.some(e => e.pos.x === x && e.pos.y === y);
+    };
 
     if (!isWall(newX, newY) && !isDoor(newX, newY)) {
       // Set direction and movement animation
@@ -664,7 +664,7 @@ const BetosaurusGame: React.FC = () => {
         playSound(150, 0.8, 'square');
       }
     }
-  }, [player, gameWon, gameLost, level, collectedPillows, collectedDreams, collectedKeys, doors, playSound, playRoar, initAudio, activePowerups, bestTimes, collectedPowerups, currentLevel, isDoor, isEnemy, isWall, levels.length, startTime]);
+  }, [player, gameWon, gameLost, level, collectedPillows, collectedDreams, collectedKeys, doors, enemies, playSound, playRoar, initAudio, activePowerups, bestTimes, collectedPowerups, currentLevel, levels.length, startTime]);
 
   // Game loop for enemy and platform movement
   useEffect(() => {
