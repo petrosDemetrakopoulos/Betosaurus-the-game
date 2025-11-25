@@ -1,13 +1,283 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+@keyframes glow {
+  0% { filter: drop-shadow(0 0 5px currentColor); }
+  100% { filter: drop-shadow(0 0 20px currentColor); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-2px); }
+  75% { transform: translateX(2px); }
+}
+
+@keyframes gradient-x {
+  0%, 100% {
+    background-size: 200% 200%;
+    background-position: left center;
+  }
+  50% {
+    background-size: 200% 200%;
+    background-position: right center;
+  }
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Bungee:wght@400&family=Fredoka:wght@300;400;500;600;700&family=Creepster&family=Orbitron:wght@400;700;900&family=Bangers&display=swap');
+
+body {
+  font-family: 'Fredoka', cursive;
+}
+
+/* Sprite Graphics */
+.sprite-player {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* Dinosaur body */
+.sprite-player::before {
+  content: '';
+  position: absolute;
+  width: 70%;
+  height: 50%;
+  background: linear-gradient(135deg, #90EE90, #228B22);
+  border-radius: 40px 20px 30px 40px;
+  bottom: 20%;
+  left: 15%;
+  border: 2px solid #1F5F1F;
+}
+
+/* Dinosaur head */
+.sprite-player::after {
+  content: '';
+  position: absolute;
+  width: 35%;
+  height: 40%;
+  background: linear-gradient(135deg, #98FB98, #32CD32);
+  border-radius: 50% 60% 40% 50%;
+  top: 10%;
+  right: 10%;
+  border: 2px solid #1F5F1F;
+  box-shadow: 
+    -8px 8px 0 -6px #228B22,
+    -4px 12px 0 -4px #000,
+    0px 12px 0 -4px #000;
+}
+
+/* Dinosaur tail */
+.sprite-player {
+  overflow: visible;
+}
+
+.sprite-player:hover::before {
+  box-shadow: -15px 5px 0 -8px #228B22;
+}
+
+.sprite-wall {
+  background: linear-gradient(45deg, #8B4513 25%, #A0522D 25%, #A0522D 50%, #8B4513 50%, #8B4513 75%, #A0522D 75%);
+  background-size: 8px 8px;
+  border: 2px solid #654321;
+  width: 100%;
+  height: 100%;
+}
+
+.sprite-pillow {
+  background: linear-gradient(135deg, #FFB6C1, #FF69B4);
+  border-radius: 20px;
+  border: 2px solid #FF1493;
+  width: 100%;
+  height: 100%;
+}
+
+.sprite-dream {
+  background: radial-gradient(circle, #87CEEB, #4169E1);
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  width: 100%;
+  height: 100%;
+}
+
+.sprite-key {
+  background: linear-gradient(45deg, #FFD700, #FFA500);
+  border-radius: 20% 20% 80% 80%;
+  width: 100%;
+  height: 100%;
+}
+
+.sprite-enemy {
+  background: radial-gradient(circle at 50% 30%, #9370DB, #4B0082);
+  border-radius: 50% 50% 70% 70%;
+  width: 100%;
+  height: 100%;
+}
+
+.sprite-bed {
+  background: linear-gradient(to bottom, #8B4513, #A0522D);
+  border-radius: 10px;
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.sprite-bed::before {
+  content: '';
+  position: absolute;
+  width: 90%;
+  height: 60%;
+  background: linear-gradient(to bottom, #FFFFFF, #F0F0F0);
+  top: 20%;
+  left: 5%;
+  border-radius: 5px;
+}
+
+.animate-gradient-x {
+  animation: gradient-x 15s ease infinite;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-glow {
+  animation: glow 2s ease-in-out infinite alternate;
+}
+
+.animate-shake {
+  animation: shake 0.5s ease-in-out infinite alternate;
+}
+
+/* Particle Systems */
+@keyframes sparkle {
+  0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1) rotate(180deg); }
+}
+
+@keyframes snow {
+  0% { transform: translateY(-100vh) translateX(0); }
+  100% { transform: translateY(100vh) translateX(100px); }
+}
+
+@keyframes bubble {
+  0% { transform: translateY(100vh) scale(0); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(-100vh) scale(1); opacity: 0; }
+}
+
+@keyframes lava {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-20px) scale(1.2); }
+}
+
+.particle {
+  position: absolute;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.sparkle-particle {
+  width: 4px;
+  height: 4px;
+  background: #FFD700;
+  border-radius: 50%;
+  animation: sparkle 1s ease-in-out;
+}
+
+.snow-particle {
+  width: 3px;
+  height: 3px;
+  background: #FFFFFF;
+  border-radius: 50%;
+  animation: snow 8s linear infinite;
+}
+
+.bubble-particle {
+  width: 6px;
+  height: 6px;
+  background: rgba(135, 206, 235, 0.6);
+  border-radius: 50%;
+  animation: bubble 6s ease-in-out infinite;
+}
+
+.lava-particle {
+  width: 5px;
+  height: 5px;
+  background: #FF4500;
+  border-radius: 50%;
+  animation: lava 2s ease-in-out infinite;
+}
+
+/* Powerup Styles */
+.powerup {
+  position: relative;
+  animation: float 2s ease-in-out infinite;
+}
+
+.powerup-speed {
+  background: linear-gradient(45deg, #00BFFF, #1E90FF);
+  border-radius: 50%;
+  border: 2px solid #0080FF;
+}
+
+.powerup-invincible {
+  background: linear-gradient(45deg, #FFD700, #FFA500);
+  border-radius: 50%;
+  border: 2px solid #FF8C00;
+}
+
+.powerup-time {
+  background: linear-gradient(45deg, #9370DB, #8A2BE2);
+  border-radius: 50%;
+  border: 2px solid #7B68EE;
+}
+
+.powerup-magnet {
+  background: linear-gradient(45deg, #FF6B6B, #FF8E53);
+  border-radius: 50%;
+  border: 2px solid #FF4757;
+}
+
+/* Boss Effects */
+@keyframes boss-glow {
+  0%, 100% { box-shadow: 0 0 20px #FF0000; }
+  50% { box-shadow: 0 0 40px #FF4500, 0 0 60px #FF0000; }
+}
+
+.boss-enemy {
+  animation: boss-glow 2s ease-in-out infinite;
+}
+
+/* Enhanced Particles */
+@keyframes star {
+  0%, 100% { transform: scale(0) rotate(0deg); opacity: 0; }
+  50% { transform: scale(1) rotate(180deg); opacity: 1; }
+}
+
+.star-particle {
+  width: 6px;
+  height: 6px;
+  background: #FFD700;
+  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  animation: star 1.5s ease-in-out;
+}
+
+/* Level Completion Effects */
+@keyframes victory {
+  0% { transform: scale(1) rotate(0deg); }
+  25% { transform: scale(1.2) rotate(90deg); }
+  50% { transform: scale(1) rotate(180deg); }
+  75% { transform: scale(1.2) rotate(270deg); }
+  100% { transform: scale(1) rotate(360deg); }
+}
+
+.victory-effect {
+  animation: victory 2s ease-in-out infinite;
 }
